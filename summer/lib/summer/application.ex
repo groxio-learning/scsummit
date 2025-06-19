@@ -10,7 +10,11 @@ defmodule Summer.Application do
     children = [
       # Starts a worker by calling: Summer.Worker.start_link(arg)
       # {Summer.Worker, arg}
-      {CounterServer, "0"}
+      Supervisor.child_spec({CounterServer, {"0", :cats}}, id: :cats_counter),
+      Supervisor.child_spec({CounterServer, {"0", :dogs}}, id: :dogs_counter),
+      Supervisor.child_spec({CounterServer, {"0", :parrots}}, id: :parrots_counter),
+      Supervisor.child_spec({CounterServer, {"0", :rabbits}}, id: :rabbits_counter),
+      Supervisor.child_spec({CounterServer, {"0", :pirates}}, id: :pirates_counter)
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -8,38 +8,38 @@ defmodule CounterServer do
   ## Client API
 
   @doc """
-  Starts the GenServer with an initial value as a string.
+  Starts the GenServer with an initial value as a string and a name atom.
   """
-  def start_link(initial_value) when is_binary(initial_value) do
-    GenServer.start_link(__MODULE__, initial_value, name: __MODULE__)
+  def start_link({initial_value, name}) when is_binary(initial_value) and is_atom(name) do
+    GenServer.start_link(__MODULE__, initial_value, name: name)
   end
 
   @doc """
   Shows the current counter value (synchronous call).
   """
-  def show do
-    GenServer.call(__MODULE__, :show)
+  def show(name) when is_atom(name) do
+    GenServer.call(name, :show)
   end
 
   @doc """
   Increments the counter (asynchronous cast).
   """
-  def inc do
-    GenServer.cast(__MODULE__, :inc)
+  def inc(name) when is_atom(name) do
+    GenServer.cast(name, :inc)
   end
 
   @doc """
   Decrements the counter (asynchronous cast).
   """
-  def dec do
-    GenServer.cast(__MODULE__, :dec)
+  def dec(name) when is_atom(name) do
+    GenServer.cast(name, :dec)
   end
 
   @doc """
   Crashes the GenServer (for demonstration purposes).
   """
-  def boom do
-    GenServer.cast(__MODULE__, :boom)
+  def boom(name) when is_atom(name) do
+    GenServer.cast(name, :boom)
   end
 
   ## Server Callbacks
