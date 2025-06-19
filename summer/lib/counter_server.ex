@@ -35,11 +35,19 @@ defmodule CounterServer do
     GenServer.cast(__MODULE__, :dec)
   end
 
+  @doc """
+  Crashes the GenServer (for demonstration purposes).
+  """
+  def boom do
+    GenServer.cast(__MODULE__, :boom)
+  end
+
   ## Server Callbacks
 
   @impl true
   def init(initial_value) do
     state = Counter.new(initial_value)
+    IO.puts("CounterServer started with state: #{inspect(state)}")
     {:ok, state}
   end
 
@@ -59,5 +67,10 @@ defmodule CounterServer do
   def handle_cast(:dec, state) do
     new_state = Counter.dec(state)
     {:noreply, new_state}
+  end
+
+  @impl true
+  def handle_cast(:boom, _state) do
+    raise "BOOM! The counter exploded!"
   end
 end
