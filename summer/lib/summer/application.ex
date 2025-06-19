@@ -10,6 +10,7 @@ defmodule Summer.Application do
     children = [
       # Starts a worker by calling: Summer.Worker.start_link(arg)
       # {Summer.Worker, arg}
+      {CounterServer, "0"}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
