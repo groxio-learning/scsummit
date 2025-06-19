@@ -1,4 +1,8 @@
-# Untitled notebook
+# Scenic City Summit Elixir OTP
+
+```elixir
+import IEx.Helpers
+```
 
 ## Scenic City course
 
@@ -179,3 +183,74 @@ end
 ```elixir
 Service.show(service)
 ```
+
+## OTP GenServer
+
+```elixir
+defmodule Server do
+  use GenServer
+
+  # client
+
+  def start_link(input) do
+    GenServer.start_link(Server, input)
+  end
+
+  # api stuff will all go here
+
+  # server
+
+  # construct
+  @impl true
+  def init(input) do
+    initial_state = Acc.new(input)
+    {:ok, initial_state}
+  end
+
+  # reduce
+
+  @impl true
+  def handle_cast(:inc, count) do
+    new_state = Acc.inc(count)
+    {:noreply, new_state}
+  end
+
+  @impl true
+  def handle_cast(:dec, count) do
+    new_state = Acc.dec(count)
+    {:noreply, new_state}
+  end
+
+
+  # convert
+
+  @impl true
+  def handle_call(:show, _from_pid, count) do
+    message = Acc.show(count)
+    {:reply, message, count}
+  end
+
+  
+end
+```
+
+```elixir
+{:ok, pid} = Server.start_link(input)
+```
+
+```elixir
+GenServer.cast(pid, :inc)
+GenServer.cast(pid, :inc)
+GenServer.cast(pid, :inc)
+```
+
+```elixir
+:sys.get_state(pid)
+
+```
+
+```elixir
+h GenServer
+```
+
+## OTP Lifecycle (supervision)
