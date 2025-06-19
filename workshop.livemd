@@ -1,0 +1,181 @@
+# Untitled notebook
+
+## Scenic City course
+
+```elixir
+1 + 1
+```
+
+```elixir
+input = 42
+```
+
+```elixir
+input + 1
+```
+
+* (c)onstruct
+* (r)educe?
+* (c) ?
+
+```elixir
+defmodule Acc do
+  def new(s) when is_bitstring(s) do
+    String.to_integer(s)
+  end
+
+  def new(int) when is_integer(int) do
+    int
+  end
+
+  def add(acc, i) when is_integer(i) do
+    acc + i
+  end
+
+  def inc(acc) do
+    add(acc, 1)
+  end
+
+  def dec(acc) do
+    add(acc, -1)
+  end
+
+
+  def show(acc) do
+    "The ants arr is #{acc}"
+  end
+
+end
+```
+
+```elixir
+import Acc
+
+two_steps_forward_and_one_back = 
+  input 
+  |> new() 
+  |> inc() 
+  |> inc() 
+  |> dec()
+  |> show()
+```
+
+```elixir
+list = [1, 1, -1]
+
+input = 42
+
+Enum.reduce(list, input, &Acc.add/2)
+```
+
+## Build a counting service
+
+```elixir
+defmodule Service do
+
+  def start(input) do
+    count = input |> Acc.new()
+
+    spawn(fn -> loop(count) end)
+  end
+
+  def inc(pid) do
+    send(pid, :inc)
+  end
+
+  def dec(pid) do
+    send(pid, :dec)
+  end
+
+  def show(pid) do
+    send(pid, {:show, self()})
+    receive do
+      m -> m
+    end
+  end
+
+  def loop(count) do
+    count
+    |> listen()
+    |> loop()
+  end
+
+  def listen(count) do
+    receive do
+      :inc -> 
+        Acc.inc(count)
+        
+      :dec -> 
+        Acc.dec(count)
+      {:show, from_pid } -> 
+        # send back the count to the user
+        message = Acc.show(count)
+        send(from_pid, message)
+        # return the current count so our recursion doesn't blow up
+        count
+    end
+  end
+end
+```
+
+```elixir
+livebook = 
+  self()
+Process.info(livebook)
+```
+
+```elixir
+
+```
+
+```elixir
+count = 12
+message = :dec
+
+send(livebook, message)
+Service.listen(count)
+```
+
+```elixir
+count = 11
+
+message = {:show, self()}
+send(self(), message)
+
+Service.listen(count)
+receive do 
+  m -> m 
+end
+```
+
+```elixir
+service = Service.start(input)
+```
+
+```elixir
+Process.alive?(service)
+```
+
+```elixir
+send(service, {:show, self()})
+```
+
+```elixir
+
+```
+
+```elixir
+send(service, :inc)
+```
+
+```elixir
+send(service, {:show, self()})
+
+receive do 
+  m -> m
+end
+```
+
+```elixir
+Service.show(service)
+```
