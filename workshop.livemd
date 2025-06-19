@@ -196,6 +196,20 @@ defmodule Server do
     GenServer.start_link(Server, input)
   end
 
+  def inc(pid) do
+    GenServer.cast(pid, :inc)
+  end
+
+  def dec(pid) do
+    GenServer.cast(pid, :dec)
+  end
+
+  def show(pid) do
+    GenServer.call(pid, :show)
+  end
+
+
+
   # api stuff will all go here
 
   # server
@@ -242,6 +256,22 @@ end
 GenServer.cast(pid, :inc)
 GenServer.cast(pid, :inc)
 GenServer.cast(pid, :inc)
+```
+
+```elixir
+GenServer.call(pid, :show)
+```
+
+```elixir
+Server.inc(pid)
+Server.inc(pid)
+Server.inc(pid)
+Server.inc(pid)
+Server.inc(pid)
+```
+
+```elixir
+Server.show(pid)
 ```
 
 ```elixir
